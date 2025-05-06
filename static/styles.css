@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.info {
+    display: block;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    margin-top: 0.25rem;
+}
+
+.predict-btn, .back-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.predict-btn:hover, .back-btn:hover {
+    background-color: #2980b9;
+}
+
+.result-container {
+    text-align: center;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+}
+
+.result-container.positive {
+    background-color: #fdeded;
+    border: 2px solid #e74c3c;
+}
+
+.result-container.negative {
+    background-color: #edfff5;
+    border: 2px solid #2ecc71;
+}
+
+.result-container h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+}
+
+.result-container.positive h2 span {
+    color: #e74c3c;
+}
+
+.result-container.negative h2 span {
+    color: #2ecc71;
+}
+
+.probability {
+    font-size: 1rem;
+}
+
+.features-summary {
+    margin-bottom: 1.5rem;
+}
+
+.features-summary h3 {
+    margin-bottom: 0.75rem;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.disclaimer {
+    background-color: #fffbeb;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border-left: 4px solid #f39c12;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+}
+
+.disclaimer p {
+    text-align: left;
+    margin-bottom: 0;
+    color: #333;
+}
+
+.back-btn {
+    background-color: #7f8c8d;
+}
+
+.back-btn:hover {
+    background-color: #6c7a89;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Diabetes Prediction Result</h1>
+        
+        <div class="result-container {% if result.prediction == 'Positive' %}positive{% else %}negative{% endif %}">
+            <h2>Prediction: <span>{{ result.prediction }}</span></h2>
+            <p class="probability">Probability: <span>{{ result.probability }}%</span></p>
+        </div>
+        
+        <div class="features-summary">
+            <h3>Input Features:</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Value</th>
+                </tr>
+                {% for feature, value in result.features.items() %}
+                <tr>
+                    <td>{{ feature }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <div class="disclaimer">
+            <p><strong>Note:</strong> This prediction is based on a machine learning model and should not be considered as a medical diagnosis. Please consult with a healthcare professional for proper medical advice.</p>
+        </div>
+        
+        <a href="/" class="back-btn">Make Another Prediction</a>
+    </div>
+</body>
+</html>
