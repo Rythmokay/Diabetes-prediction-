@@ -12,7 +12,6 @@ A modern web application that predicts diabetes risk based on health metrics usi
 - 🔮 Real-time prediction of diabetes risk with probability percentage
 - 📱 Responsive design that works on mobile, tablet, and desktop devices
 - 📋 Detailed results page with input feature summary
-- 🚀 Ready for deployment on Vercel's serverless platform
 
 ## 📷 Screenshots
 
@@ -36,7 +35,6 @@ A modern web application that predicts diabetes risk based on health metrics usi
 - **Machine Learning**: scikit-learn (Random Forest Classifier)
 - **Frontend**: HTML5, CSS3 with responsive design
 - **Data Processing**: NumPy, Pandas
-- **Deployment**: Vercel serverless platform
 
 ## 📊 Dataset
 
@@ -52,7 +50,7 @@ The application uses the Pima Indians Diabetes Dataset, which includes the follo
 - Age: Age in years
 - Outcome: Class variable (0: No diabetes, 1: Diabetes)
 
-## 🚀 Local Development
+## 💻 How to Run
 
 ### Prerequisites
 
@@ -63,7 +61,7 @@ The application uses the Pima Indians Diabetes Dataset, which includes the follo
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/Diabetes-prediction-.git
+   git clone https://github.com/Rythmokay/Diabetes-prediction-.git
    cd Diabetes-prediction-
    ```
 
@@ -78,40 +76,6 @@ The application uses the Pima Indians Diabetes Dataset, which includes the follo
    ```
 
 4. Open your browser and navigate to `http://127.0.0.1:5000`
-
-## 🌐 Deploying to Vercel
-
-This application is configured for deployment on Vercel. Follow these steps to deploy:
-
-### Using Vercel CLI
-
-1. Install Vercel CLI:
-   ```bash
-   npm install -g vercel
-   ```
-
-2. Login to Vercel:
-   ```bash
-   vercel login
-   ```
-
-3. Deploy the application:
-   ```bash
-   vercel
-   ```
-
-4. For production deployment:
-   ```bash
-   vercel --prod
-   ```
-
-### Using Vercel Dashboard
-
-1. Push your code to GitHub
-2. Go to [Vercel](https://vercel.com) and sign in
-3. Click "New Project" and import your repository
-4. Select the Python framework preset
-5. Click "Deploy"
 
 ## 📁 Project Structure
 
@@ -129,8 +93,6 @@ This application is configured for deployment on Vercel. Follow these steps to d
 │   ├── index.html         # Input form page
 │   └── result.html        # Prediction results page
 ├── requirements.txt       # Python dependencies
-├── vercel.json           # Vercel configuration
-├── runtime.txt           # Python runtime specification
 ├── .gitignore            # Git ignore rules
 └── README.md             # Project documentation
 ```
