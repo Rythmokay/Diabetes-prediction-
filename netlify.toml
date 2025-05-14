@@ -1,0 +1,11 @@
+[build]
+  command = "pip install -r requirements-netlify.txt"
+  publish = "."
+
+[build.environment]
+  PYTHON_VERSION = "3.9.18"
+
+[[redirects]]
+  from = "/*"
+  to = "/app.py"
+  status = 200
