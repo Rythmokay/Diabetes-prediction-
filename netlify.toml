@@ -1,11 +1,17 @@
 [build]
-  command = "pip install -r requirements.txt"
-  publish = "."
+  publish = "public"
+  command = "mkdir -p public && pip install -r requirements.txt"
 
 [build.environment]
   PYTHON_VERSION = "3.9"
 
+[dev]
+  framework = "#static"
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/api"
   status = 200
