@@ -39,7 +39,6 @@ Open `public/index.html` in your browser
 ├── public/                # Static site files
 │   ├── index.html         # Main application
 │   └── static/            # CSS and assets
-├── data/                  # Dataset files
 └── netlify.toml          # Netlify configuration
 ```
 
