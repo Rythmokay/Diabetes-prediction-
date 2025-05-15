@@ -1,20 +1,11 @@
 {
   "name": "diabetes-prediction",
   "version": "1.0.0",
-  "description": "Diabetes Prediction System",
+  "description": "Diabetes Prediction System using Flask and Machine Learning",
   "main": "index.js",
   "scripts": {
-    "start": "netlify dev"
+    "build": "node build.js"
   },
-  "dependencies": {
-    "express": "^4.17.1",
-    "serverless-http": "^2.7.0"
-  },
-  "devDependencies": {
-    "netlify-cli": "^12.0.0"
-  },
-  "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
