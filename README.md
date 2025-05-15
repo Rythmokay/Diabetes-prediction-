@@ -2,6 +2,14 @@
 
 A web application that predicts diabetes risk based on health metrics using machine learning.
 
+## Preview
+
+### Input Form
+![Input Form](Imagebeforeinput.png)
+
+### Results
+![Results](Imageafteroutput.png)
+
 ## Features
 
 - Interactive form for entering health metrics
