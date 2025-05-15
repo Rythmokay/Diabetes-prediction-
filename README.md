@@ -4,7 +4,7 @@
   <img src="screenshots/banner.svg" alt="Diabetes Prediction Banner" width="800">
 </p>
 
-A modern web application that predicts diabetes risk based on health metrics using machine learning. The application uses a Random Forest classifier trained on the Pima Indians Diabetes Dataset to provide accurate risk assessments with probability scores.
+A modern web application that predicts diabetes risk based on health metrics using machine learning. The application uses a model based on the Pima Indians Diabetes Dataset to provide risk assessments with probability scores. This version is optimized for static hosting on Netlify.
 
 ## ✨ Features
 
@@ -12,6 +12,7 @@ A modern web application that predicts diabetes risk based on health metrics usi
 - 🔮 Real-time prediction of diabetes risk with probability percentage
 - 📱 Responsive design that works on mobile, tablet, and desktop devices
 - 📋 Detailed results page with input feature summary
+- 🌐 Static site deployment on Netlify with client-side prediction
 
 ## 📷 Screenshots
 
@@ -31,14 +32,13 @@ A modern web application that predicts diabetes risk based on health metrics usi
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Flask (Python 3.9+)
-- **Machine Learning**: scikit-learn (Random Forest Classifier)
 - **Frontend**: HTML5, CSS3 with responsive design
-- **Data Processing**: NumPy, Pandas
+- **Prediction**: JavaScript implementation of decision tree ensemble
+- **Deployment**: Netlify static site hosting
 
 ## 📊 Dataset
 
-The application uses the Pima Indians Diabetes Dataset, which includes the following features:
+The application is based on the Pima Indians Diabetes Dataset, which includes the following features:
 
 - Pregnancies: Number of times pregnant
 - Glucose: Plasma glucose concentration (mg/dL)
@@ -50,76 +50,82 @@ The application uses the Pima Indians Diabetes Dataset, which includes the follo
 - Age: Age in years
 - Outcome: Class variable (0: No diabetes, 1: Diabetes)
 
-## 💻 How to Run
+## 🌐 Deployment
 
-### Prerequisites
+### Netlify Deployment
 
-- Python 3.9 or higher
-- pip (Python package manager)
+This application is optimized for deployment on Netlify as a static site:
 
-### Setup
-
-1. Clone the repository:
+1. Fork or clone the repository:
    ```bash
    git clone https://github.com/Rythmokay/Diabetes-prediction-.git
    cd Diabetes-prediction-
    ```
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. Deploy to Netlify:
+   - Connect your GitHub repository to Netlify
+   - Use the default Netlify settings (it will automatically detect the static site)
+   - No build command is required as this is a pure static site
 
-3. Run the application:
-   ```bash
-   python app.py
-   ```
+### Local Development
 
-4. Open your browser and navigate to `http://127.0.0.1:5000`
+To run the application locally:
+
+1. Open the `public/index.html` file in your web browser
 
 ## 📁 Project Structure
 
 ```
-├── app.py                 # Main Flask application
-├── data/                  # Dataset directory
-│   └── diabetes.csv       # Diabetes dataset
-├── model/                 # Directory for saved models
+├── public/                # Static site files
+│   ├── index.html         # Main application page
+│   └── static/            # Static assets
+│       └── styles.css     # CSS styles
 ├── screenshots/           # Application screenshots
 │   ├── input_screen.svg   # Input form screenshot
 │   └── output_screen.svg  # Results page screenshot
-├── static/                # Static assets
-│   └── styles.css         # CSS styles
-├── templates/             # HTML templates
-│   ├── index.html         # Input form page
-│   └── result.html        # Prediction results page
-├── requirements.txt       # Python dependencies
+├── netlify.toml          # Netlify configuration
 ├── .gitignore            # Git ignore rules
 └── README.md             # Project documentation
 ```
 
 ## ⚙️ How It Works
 
-1. **Data Loading**: The application loads the Pima Indians Diabetes Dataset
-2. **Preprocessing**: Data is split into training and testing sets, and features are standardized
-3. **Model Training**: A Random Forest classifier is trained on the preprocessed data
-4. **User Input**: Users enter their health metrics through the web interface
-5. **Prediction**: The model predicts diabetes risk based on the input features
-6. **Results**: Prediction results are displayed with probability score and feature summary
+The application uses a client-side implementation of a decision tree ensemble to predict diabetes risk:
+
+1. **Data Collection**: Users enter their health metrics through a web form
+2. **Data Processing**: JavaScript code normalizes the input features using pre-calculated means and standard deviations
+3. **Prediction**: A JavaScript implementation of a decision tree ensemble (similar to Random Forest) makes predictions
+4. **Results Display**: The prediction result is displayed with probability score and input feature summary
+
+This static implementation allows the application to run entirely in the browser without any server-side processing, making it perfect for deployment on static hosting platforms like Netlify.
 
 ## 🔍 Model Performance
 
-The Random Forest classifier achieves approximately 72% accuracy on the test dataset. The model is trained with the following parameters:
+The JavaScript implementation of the decision tree ensemble approximates the behavior of the original Random Forest classifier. While the exact performance metrics may differ slightly from the original Python model, it provides a reasonable approximation for demonstration purposes in a static site environment.
 
-- n_estimators: 100 (number of trees in the forest)
-- random_state: 42 (for reproducibility)
+The client-side model uses:
+
+- Feature normalization based on the Pima Indians dataset statistics
+- An ensemble of decision trees with different feature focuses
+- Probability calculation through ensemble averaging
 
 ## 📝 Future Improvements
 
-- Add user authentication for saving prediction history
-- Implement additional machine learning models for comparison
-- Add data visualization for better understanding of risk factors
-- Develop a REST API for integration with other applications
-- Add multi-language support for international users
+- Implement more advanced client-side machine learning with TensorFlow.js
+- Add visualization charts for prediction results
+- Create a user account system to save prediction history
+- Add explanations for feature importance in predictions
+- Implement offline capabilities with Progressive Web App features
+
+## 👨‍💻 Author
+
+- **Rythmokay** - *Initial work*
+
+## 👍 Acknowledgments
+
+- UCI Machine Learning Repository for the Pima Indians Diabetes Dataset
+- Netlify for static site hosting
+- The open-source web development community
 
 ## 🔒 Privacy
 

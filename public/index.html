@@ -79,7 +79,7 @@
             const form = document.getElementById('prediction-form');
             
             // Add submit event listener
-            form.addEventListener('submit', function(event) {
+            form.addEventListener('submit', async function(event) {
                 // Prevent the default form submission
                 event.preventDefault();
                 
@@ -97,29 +97,39 @@
                     const diabetesPedigree = parseFloat(document.getElementById('diabetes_pedigree').value);
                     const age = parseFloat(document.getElementById('age').value);
                     
-                    // Create features array
-                    const features = [
+                    // Create form data object for API call
+                    const formData = {
                         pregnancies,
                         glucose,
-                        bloodPressure,
-                        skinThickness,
+                        blood_pressure: bloodPressure,
+                        skin_thickness: skinThickness,
                         insulin,
                         bmi,
-                        diabetesPedigree,
+                        diabetes_pedigree: diabetesPedigree,
                         age
-                    ];
+                    };
                     
-                    // Make prediction using the client-side model
-                    setTimeout(() => {
-                        // Hide loading message
-                        hideLoading();
-                        
-                        // Make prediction
-                        const result = makePrediction(features);
-                        
-                        // Show result
-                        showResult(result);
-                    }, 500); // Small delay for UX
+                    // Make API call to the Python serverless function
+                    const response = await fetch('/.netlify/functions/predict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    // Parse the response
+                    const result = await response.json();
+                    
+                    // Hide loading message
+                    hideLoading();
+                    
+                    // Show result
+                    showResult(result);
                 } catch (error) {
                     // Hide loading message
                     hideLoading();
@@ -154,55 +164,7 @@
                 }
             }
             
-            // Function to make prediction using a Random Forest approximation
-            function makePrediction(features) {
-                // Normalize features - using means and stds from the Pima Indians dataset
-                const means = [3.8, 120.9, 69.1, 20.5, 79.8, 32.0, 0.47, 33.2];
-                const stds = [3.4, 32.0, 19.4, 16.0, 115.2, 7.9, 0.3, 11.8];
-                
-                const normalizedFeatures = features.map((value, index) => {
-                    return (value - means[index]) / stds[index];
-                });
-                
-                // This is a simplified model that approximates the Random Forest classifier
-                // It uses an ensemble of decision trees represented as nested if-else statements
-                
-                // Decision tree 1 - focuses on glucose and BMI
-                let tree1 = normalizedFeatures[1] > 0.5 ? 0.8 : 0.3;
-                if (normalizedFeatures[5] > 0.7) tree1 += 0.1;
-                if (normalizedFeatures[6] > 1.0) tree1 += 0.1;
-                
-                // Decision tree 2 - focuses on age and pregnancies
-                let tree2 = normalizedFeatures[7] > 0.5 ? 0.7 : 0.4;
-                if (normalizedFeatures[0] > 0.8) tree2 += 0.2;
-                if (normalizedFeatures[1] > 1.0) tree2 += 0.1;
-                
-                // Decision tree 3 - focuses on insulin and diabetes pedigree
-                let tree3 = normalizedFeatures[4] > 0.6 ? 0.6 : 0.3;
-                if (normalizedFeatures[6] > 1.2) tree3 += 0.3;
-                if (normalizedFeatures[1] > 0.7) tree3 += 0.1;
-                
-                // Ensemble average
-                const probability = (tree1 + tree2 + tree3) / 3;
-                const probabilityPercent = Math.round(probability * 100);
-                const result = probability >= 0.5 ? 'Positive' : 'Negative';
-                
-                // Create result object
-                return {
-                    prediction: result,
-                    probability: probabilityPercent,
-                    features: {
-                        'Pregnancies': features[0],
-                        'Glucose': features[1],
-                        'Blood Pressure': features[2],
-                        'Skin Thickness': features[3],
-                        'Insulin': features[4],
-                        'BMI': features[5],
-                        'Diabetes Pedigree Function': features[6],
-                        'Age': features[7]
-                    }
-                };
-            }
+            // No longer need the client-side prediction function as we're using the Python model
             
             // Function to show the result
             function showResult(result) {

@@ -1,18 +1,29 @@
-#!/usr/bin/env python
+import json
 import os
 import sys
-import json
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+import joblib
+
+# Add the project root to the path so we can import from app.py
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+# Model and scaler variables
+model = None
+scaler = None
+model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'model', 'diabetes_model.joblib')
+scaler_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'model', 'scaler.joblib')
 
 def train_model():
-    """Train a model on the diabetes dataset"""
+    global model, scaler
+    print("Training new model...")
+    
     # Load dataset
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    data_path = os.path.join(base_dir, 'data', 'diabetes.csv')
+    data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'diabetes.csv')
     data = pd.read_csv(data_path)
     
     # Split features and target
@@ -25,73 +36,97 @@ def train_model():
     # Standardize features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
     
     # Train Random Forest model
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train_scaled, y_train)
     
+    # Save model and scaler
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    joblib.dump(model, model_path)
+    joblib.dump(scaler, scaler_path)
+    
+    # Evaluate model
+    y_pred = model.predict(X_test_scaled)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Model Accuracy: {accuracy:.4f}")
+    
     return model, scaler
 
-def predict(form_data):
-    """Make a prediction using the trained model"""
-    # Train the model
-    model, scaler = train_model()
-    
-    # Get input values from form
-    features = [
-        float(form_data.get('pregnancies', 0)),
-        float(form_data.get('glucose', 0)),
-        float(form_data.get('blood_pressure', 0)),
-        float(form_data.get('skin_thickness', 0)),
-        float(form_data.get('insulin', 0)),
-        float(form_data.get('bmi', 0)),
-        float(form_data.get('diabetes_pedigree', 0)),
-        float(form_data.get('age', 0))
-    ]
-    
-    # Make features into array and scale
-    input_features = np.array(features).reshape(1, -1)
-    input_features_scaled = scaler.transform(input_features)
-    
-    # Make prediction
-    prediction = model.predict(input_features_scaled)[0]
-    
-    # Get prediction probability
-    proba = model.predict_proba(input_features_scaled)[0][1]
-    probability = round(proba * 100, 2)
-    
-    # Return result
-    result = {
-        'prediction': 'Positive' if prediction == 1 else 'Negative',
-        'probability': probability,
-        'features': {
-            'Pregnancies': features[0],
-            'Glucose': features[1],
-            'Blood Pressure': features[2],
-            'Skin Thickness': features[3],
-            'Insulin': features[4],
-            'BMI': features[5],
-            'Diabetes Pedigree Function': features[6],
-            'Age': features[7]
-        }
-    }
-    
-    return result
-
-if __name__ == '__main__':
+def load_model():
+    global model, scaler
     try:
-        # Get form data from JSON file
-        if len(sys.argv) > 1:
-            json_file_path = sys.argv[1]
-            with open(json_file_path, 'r') as f:
-                form_data = json.load(f)
-            
-            # Make prediction
-            result = predict(form_data)
-            
-            # Print result as JSON
-            print(json.dumps(result))
-        else:
-            print(json.dumps({"error": "No form data provided"}))
+        model = joblib.load(model_path)
+        scaler = joblib.load(scaler_path)
+        print("Model loaded successfully")
+    except:
+        print("Could not load model, training new one")
+        model, scaler = train_model()
+    return model, scaler
+
+def handler(event, context):
+    global model, scaler
+    
+    # Parse the request body
+    try:
+        request_body = json.loads(event['body'])
+    except:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({'error': 'Invalid request body'})
+        }
+    
+    # Ensure model is loaded
+    if model is None or scaler is None:
+        model, scaler = load_model()
+    
+    try:
+        # Extract features
+        features = []
+        for field in ['pregnancies', 'glucose', 'blood_pressure', 'skin_thickness',
+                    'insulin', 'bmi', 'diabetes_pedigree', 'age']:
+            features.append(float(request_body.get(field, 0)))
+        
+        # Make features into array and scale
+        input_features = np.array(features).reshape(1, -1)
+        input_features_scaled = scaler.transform(input_features)
+        
+        # Make prediction
+        prediction = model.predict(input_features_scaled)[0]
+        
+        # Get prediction probability
+        proba = model.predict_proba(input_features_scaled)[0][1]
+        probability = round(proba * 100, 2)
+        
+        # Return result
+        result = {
+            'prediction': 'Positive' if prediction == 1 else 'Negative',
+            'probability': probability,
+            'features': {
+                'Pregnancies': features[0],
+                'Glucose': features[1],
+                'Blood Pressure': features[2],
+                'Skin Thickness': features[3],
+                'Insulin': features[4],
+                'BMI': features[5],
+                'Diabetes Pedigree Function': features[6],
+                'Age': features[7]
+            }
+        }
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS'
+            },
+            'body': json.dumps(result)
+        }
     except Exception as e:
-        print(json.dumps({"error": str(e)}))
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
