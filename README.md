@@ -4,7 +4,7 @@
   <img src="screenshots/banner.svg" alt="Diabetes Prediction Banner" width="800">
 </p>
 
-A modern web application that predicts diabetes risk based on health metrics using machine learning. The application uses a model based on the Pima Indians Diabetes Dataset to provide risk assessments with probability scores. This version is optimized for static hosting on Netlify.
+A modern web application that predicts diabetes risk based on health metrics using machine learning. The application uses a Random Forest model trained on the Pima Indians Diabetes Dataset to provide risk assessments with probability scores. This version uses a Python API for predictions and a static frontend hosted on Netlify.
 
 ## ✨ Features
 
@@ -12,7 +12,8 @@ A modern web application that predicts diabetes risk based on health metrics usi
 - 🔮 Real-time prediction of diabetes risk with probability percentage
 - 📱 Responsive design that works on mobile, tablet, and desktop devices
 - 📋 Detailed results page with input feature summary
-- 🌐 Static site deployment on Netlify with client-side prediction
+- 🌐 Static frontend on Netlify with Python API for accurate predictions
+- 🧠 Uses the original Random Forest model for maximum accuracy
 
 ## 📷 Screenshots
 
@@ -33,8 +34,11 @@ A modern web application that predicts diabetes risk based on health metrics usi
 ## 🛠️ Technology Stack
 
 - **Frontend**: HTML5, CSS3 with responsive design
-- **Prediction**: JavaScript implementation of decision tree ensemble
-- **Deployment**: Netlify static site hosting
+- **Backend**: Python Flask API with scikit-learn
+- **Machine Learning**: Random Forest classifier trained on the Pima Indians dataset
+- **Deployment**: 
+  - Frontend: Netlify static site hosting
+  - Backend: Python API on platforms like Render, Heroku, or PythonAnywhere
 
 ## 📊 Dataset
 
@@ -52,31 +56,87 @@ The application is based on the Pima Indians Diabetes Dataset, which includes th
 
 ## 🌐 Deployment
 
-### Netlify Deployment
+This application consists of two parts that need to be deployed separately:
+1. A static frontend (HTML/CSS/JS) hosted on Netlify
+2. A Python API that runs the actual machine learning model
 
-This application is optimized for deployment on Netlify as a static site:
+### Python API Deployment
 
-1. Fork or clone the repository:
+1. Deploy the Python API first:
+
    ```bash
+   # Clone the repository
    git clone https://github.com/Rythmokay/Diabetes-prediction-.git
    cd Diabetes-prediction-
+   
+   # Deploy the API to a Python-friendly platform
+   # Option 1: Render.com
+   # - Create a new Web Service on Render
+   # - Connect your GitHub repository
+   # - Set the build command: pip install -r api/requirements.txt
+   # - Set the start command: gunicorn --chdir api app:app
+   
+   # Option 2: Heroku
+   # - Create a new Heroku app
+   # - Set the buildpack to Python
+   # - Deploy the api directory
+   # - Set the Procfile to: web: gunicorn --chdir api app:app
+   
+   # Option 3: PythonAnywhere
+   # - Upload the api directory
+   # - Set up a web app with Flask
+   # - Configure the WSGI file to point to api/app.py
    ```
 
-2. Deploy to Netlify:
-   - Connect your GitHub repository to Netlify
-   - Use the default Netlify settings (it will automatically detect the static site)
-   - No build command is required as this is a pure static site
+2. After deploying the API, note the URL where it's hosted (e.g., `https://your-app-name.onrender.com`)
+
+3. Update the API_URL in `public/index.html` to point to your deployed API:
+   ```javascript
+   const API_URL = 'https://your-app-name.onrender.com/api/predict';
+   ```
+
+### Frontend Deployment on Netlify
+
+1. After updating the API URL, deploy the frontend to Netlify:
+
+   ```bash
+   # Deploy to Netlify
+   # Option 1: Netlify CLI
+   netlify deploy --dir=public --prod
+   
+   # Option 2: Netlify UI
+   # - Connect your GitHub repository to Netlify
+   # - Set the publish directory to 'public'
+   # - No build command is required
+   ```
 
 ### Local Development
 
 To run the application locally:
 
-1. Open the `public/index.html` file in your web browser
+1. Start the Python API:
+   ```bash
+   cd api
+   pip install -r requirements.txt
+   python app.py
+   ```
 
-## 📁 Project Structure
+2. Update the API_URL in `public/index.html` to point to your local API:
+   ```javascript
+   const API_URL = 'http://localhost:5000/api/predict';
+   ```
+
+3. Open the `public/index.html` file in your web browser
+
+## 💡 Project Structure
 
 ```
-├── public/                # Static site files
+├── api/                  # Python API for predictions
+│   ├── app.py             # Flask API application
+│   └── requirements.txt   # Python dependencies
+├── data/                 # Dataset directory
+│   └── diabetes.csv       # Pima Indians Diabetes Dataset
+├── public/                # Static frontend files
 │   ├── index.html         # Main application page
 │   └── static/            # Static assets
 │       └── styles.css     # CSS styles
@@ -84,30 +144,34 @@ To run the application locally:
 │   ├── input_screen.svg   # Input form screenshot
 │   └── output_screen.svg  # Results page screenshot
 ├── netlify.toml          # Netlify configuration
+├── app.py                # Original Flask application
 ├── .gitignore            # Git ignore rules
 └── README.md             # Project documentation
 ```
 
 ## ⚙️ How It Works
 
-The application uses a client-side implementation of a decision tree ensemble to predict diabetes risk:
+The application uses a client-server architecture to predict diabetes risk:
 
 1. **Data Collection**: Users enter their health metrics through a web form
-2. **Data Processing**: JavaScript code normalizes the input features using pre-calculated means and standard deviations
-3. **Prediction**: A JavaScript implementation of a decision tree ensemble (similar to Random Forest) makes predictions
-4. **Results Display**: The prediction result is displayed with probability score and input feature summary
+2. **API Request**: The frontend sends the health metrics to the Python API
+3. **Data Processing**: The Python API normalizes the input features using StandardScaler
+4. **Prediction**: The actual Random Forest model trained on the Pima Indians dataset makes predictions
+5. **API Response**: The prediction results are sent back to the frontend
+6. **Results Display**: The prediction result is displayed with probability score and input feature summary
 
-This static implementation allows the application to run entirely in the browser without any server-side processing, making it perfect for deployment on static hosting platforms like Netlify.
+This architecture combines the benefits of static site hosting (fast loading, global CDN) with the accuracy of the original Python machine learning model.
 
 ## 🔍 Model Performance
 
-The JavaScript implementation of the decision tree ensemble approximates the behavior of the original Random Forest classifier. While the exact performance metrics may differ slightly from the original Python model, it provides a reasonable approximation for demonstration purposes in a static site environment.
+This application uses the original Python Random Forest classifier trained on the Pima Indians Diabetes Dataset, ensuring maximum prediction accuracy. The model achieves good performance metrics on the test dataset.
 
-The client-side model uses:
+The Python model includes:
 
-- Feature normalization based on the Pima Indians dataset statistics
-- An ensemble of decision trees with different feature focuses
-- Probability calculation through ensemble averaging
+- Feature normalization using scikit-learn's StandardScaler
+- Random Forest classifier with 100 estimators
+- Probability calculation based on the full ensemble of decision trees
+- Cross-validation to ensure model robustness
 
 ## 📝 Future Improvements
 
